@@ -124,12 +124,12 @@ export async function POST(
         }
       })
 
-      // Creer une notification QUOTE_ACCEPTED
+      // Créer une notification QUOTE_ACCEPTED
       await prisma.notification.create({
         data: {
           type: 'QUOTE_ACCEPTED',
-          title: 'Devis accepte',
-          message: `Le devis ${quote.quoteNumber} (${quote.project.client.companyName}) a ete accepte par le client`,
+          title: 'Devis accepté',
+          message: `Le devis ${quote.quoteNumber} (${quote.project.client.companyName}) a été accepté par le client`,
           link: `/projects/${quote.projectId}?tab=devis`,
           relatedId: quote.id,
           relatedType: 'quote',

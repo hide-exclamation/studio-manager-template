@@ -281,7 +281,7 @@ export function InvoicesList() {
                   )}>
                     {isOverdue(invoice) && invoice.status !== 'OVERDUE' && <AlertCircle size={14} />}
                     <Calendar size={14} />
-                    Echeance: {formatDate(invoice.dueDate)}
+                    Échéance: {formatDate(invoice.dueDate)}
                   </span>
                 </div>
               </div>

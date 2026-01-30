@@ -37,7 +37,7 @@ export default async function InvoicePage({ params }: Props) {
     notFound()
   }
 
-  // Serialiser les donnees pour le composant client
+  // Sérialiser les données pour le composant client
   const serializedInvoice = {
     ...invoice,
     subtotal: invoice.subtotal.toString(),

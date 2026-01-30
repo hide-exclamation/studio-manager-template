@@ -500,7 +500,7 @@ export function QuotePreview({ quote }: { quote: Quote }) {
                 className="text-sm mb-4 text-center"
                 style={{ color: 'var(--color-status-success)' }}
               >
-                Ce devis a ete accepte. Vous pouvez maintenant generer les factures.
+                Ce devis a été accepté. Vous pouvez maintenant générer les factures.
               </p>
               <div className="flex items-center justify-center gap-3">
                 <Link
@@ -512,7 +512,7 @@ export function QuotePreview({ quote }: { quote: Quote }) {
                   }}
                 >
                   <Receipt size={16} />
-                  Facture depot ({quote.depositPercent}%)
+                  Facture dépôt ({quote.depositPercent}%)
                 </Link>
                 <Link
                   href={`/factures/nouveau?projet=${quote.project.id}&devis=${quote.id}&type=FINAL`}

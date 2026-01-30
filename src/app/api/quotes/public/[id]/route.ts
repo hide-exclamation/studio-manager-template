@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { serializeDecimal } from '@/lib/serialize'
 
-// GET /api/quotes/public/[id] - Recupere un devis par son token public
+// GET /api/quotes/public/[id] - Récupère un devis par son token public
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -50,12 +50,12 @@ export async function GET(
         data: { status: 'VIEWED' }
       })
 
-      // Creer une notification QUOTE_VIEWED en temps reel
+      // Créer une notification QUOTE_VIEWED en temps réel
       await prisma.notification.create({
         data: {
           type: 'QUOTE_VIEWED',
-          title: 'Devis consulte',
-          message: `Le devis ${quote.quoteNumber} (${quote.project.client.companyName}) a ete consulte par le client`,
+          title: 'Devis consulté',
+          message: `Le devis ${quote.quoteNumber} (${quote.project.client.companyName}) a été consulté par le client`,
           link: `/projects/${quote.projectId}?tab=devis`,
           relatedId: quote.id,
           relatedType: 'quote',

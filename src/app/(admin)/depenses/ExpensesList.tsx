@@ -709,7 +709,7 @@ export function ExpensesList() {
               {/* Category */}
               <div>
                 <label className="block text-sm mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
-                  Categorie *
+                  Catégorie *
                 </label>
                 <select
                   value={formData.categoryId}
@@ -829,7 +829,7 @@ export function ExpensesList() {
               {/* Receipt URL */}
               <div>
                 <label className="block text-sm mb-1.5" style={{ color: 'var(--color-text-secondary)' }}>
-                  Lien vers le recu
+                  Lien vers le reçu
                 </label>
                 <input
                   type="url"
