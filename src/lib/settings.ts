@@ -27,7 +27,7 @@ export interface BrandColors {
   accentDark: string
 }
 
-// Fallbacks generiques
+// Fallbacks génériques
 export const DEFAULTS = {
   companyName: 'Mon Studio',
   companyShortName: 'MS',
@@ -41,8 +41,8 @@ export const DEFAULTS = {
 } as const
 
 /**
- * Recupere les settings du studio depuis la base de donnees
- * Retourne les valeurs par defaut si aucun enregistrement n'existe
+ * Récupère les settings du studio depuis la base de données
+ * Retourne les valeurs par défaut si aucun enregistrement n'existe
  */
 export async function getSettings(): Promise<StudioSettings> {
   const settings = await prisma.studioSettings.findFirst({
@@ -50,7 +50,7 @@ export async function getSettings(): Promise<StudioSettings> {
   })
 
   if (!settings) {
-    // Retourner les valeurs par defaut si pas de settings
+    // Retourner les valeurs par défaut si pas de settings
     return {
       id: 'default',
       companyName: DEFAULTS.companyName,
@@ -94,7 +94,7 @@ export async function getSettings(): Promise<StudioSettings> {
 }
 
 /**
- * Recupere uniquement les couleurs de marque
+ * Récupère uniquement les couleurs de marque
  */
 export async function getBrandColors(): Promise<BrandColors> {
   const settings = await getSettings()
@@ -151,7 +151,7 @@ export function formatDateShort(date: Date | string): string {
 }
 
 /**
- * Recupere le nom de l'entreprise avec fallback
+ * Récupère le nom de l'entreprise avec fallback
  */
 export async function getCompanyName(): Promise<string> {
   const settings = await getSettings()
@@ -159,7 +159,7 @@ export async function getCompanyName(): Promise<string> {
 }
 
 /**
- * Recupere le nom court de l'entreprise avec fallback
+ * Récupère le nom court de l'entreprise avec fallback
  */
 export async function getCompanyShortName(): Promise<string> {
   const settings = await getSettings()
@@ -167,7 +167,7 @@ export async function getCompanyShortName(): Promise<string> {
 }
 
 /**
- * Recupere l'email de l'entreprise avec fallback
+ * Récupère l'email de l'entreprise avec fallback
  */
 export async function getCompanyEmail(): Promise<string> {
   const settings = await getSettings()
@@ -175,7 +175,7 @@ export async function getCompanyEmail(): Promise<string> {
 }
 
 /**
- * Recupere l'email d'envoi (senderEmail ou companyEmail)
+ * Récupère l'email d'envoi (senderEmail ou companyEmail)
  */
 export async function getSenderEmail(): Promise<string> {
   const settings = await getSettings()
@@ -183,7 +183,7 @@ export async function getSenderEmail(): Promise<string> {
 }
 
 /**
- * Recupere les taux de taxes
+ * Récupère les taux de taxes
  */
 export async function getTaxRates(): Promise<{ tpsRate: number; tvqRate: number }> {
   const settings = await getSettings()
