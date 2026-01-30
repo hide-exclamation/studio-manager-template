@@ -9,30 +9,127 @@ Application de gestion complète pour studios créatifs, agences et freelances. 
 - Node.js 18+
 - npm ou yarn
 - Un compte [Supabase](https://supabase.com) (gratuit)
-- Un compte [Resend](https://resend.com) pour l'envoi d'emails (gratuit jusqu'à 3000 emails/mois)
+- Un compte [Resend](https://resend.com) pour l'envoi d'emails (optionnel, gratuit jusqu'à 3000 emails/mois)
 
-### Installation
+---
+
+## 📋 Installation pas à pas
+
+### Étape 1 : Cloner et installer
 
 ```bash
-# 1. Cloner le repository
 git clone https://github.com/votre-username/studio-manager.git
 cd studio-manager
-
-# 2. Installer les dépendances
 npm install
+```
 
-# 3. Configurer les variables d'environnement
+### Étape 2 : Créer un projet Supabase
+
+1. Allez sur [supabase.com/dashboard](https://supabase.com/dashboard)
+2. Cliquez **"New Project"**
+3. Remplissez :
+   - **Name** : Le nom de votre choix
+   - **Database Password** : Générez un mot de passe fort et **notez-le !**
+   - **Region** : Choisissez la plus proche de vous
+4. Attendez ~2 minutes que le projet soit prêt
+
+### Étape 3 : Récupérer les credentials Supabase
+
+#### A. Clés API
+
+1. Dans votre projet Supabase, allez dans **Settings** (icône engrenage)
+2. Cliquez sur **API Keys**
+3. Copiez :
+   - **Publishable key** → C'est votre `NEXT_PUBLIC_SUPABASE_ANON_KEY`
+   - L'URL du projet est : `https://[votre-ref-projet].supabase.co` → C'est votre `NEXT_PUBLIC_SUPABASE_URL`
+
+#### B. URLs de base de données
+
+1. Cliquez sur le bouton **"Connect"** en haut de la page
+2. Dans la fenêtre "Connect to your project" :
+
+   **Pour DATABASE_URL :**
+   - Sélectionnez **Method: Transaction pooler**
+   - Copiez l'URL (format : `postgresql://postgres.[ref]:[PASSWORD]@...pooler.supabase.com:6543/postgres`)
+   - Ajoutez `?pgbouncer=true` à la fin
+
+   **Pour DIRECT_URL :**
+   - Sélectionnez **Method: Direct connection**
+   - Copiez l'URL (format : `postgresql://postgres:[PASSWORD]@db.[ref].supabase.co:5432/postgres`)
+
+3. Remplacez `[YOUR-PASSWORD]` par votre mot de passe de base de données
+
+> ⚠️ **Important** : Si votre mot de passe contient des caractères spéciaux (`!`, `@`, `#`, etc.), vous devez les encoder :
+> - `!` → `%21`
+> - `@` → `%40`
+> - `#` → `%23`
+> - Exemple : `MonPass!` devient `MonPass%21`
+
+### Étape 4 : Configurer le fichier .env
+
+Créez un fichier `.env` à la racine du projet :
+
+```bash
 cp .env.example .env
-# Éditer .env avec vos credentials (voir section Configuration)
+```
 
-# 4. Initialiser la base de données
-npx prisma migrate dev
+Puis éditez-le avec vos valeurs :
 
-# 5. Lancer le serveur de développement
+```env
+# SUPABASE
+NEXT_PUBLIC_SUPABASE_URL="https://votre-ref.supabase.co"
+NEXT_PUBLIC_SUPABASE_ANON_KEY="sb_publishable_xxxx..."
+
+# DATABASE (remplacez [PASSWORD] par votre mot de passe encodé)
+DATABASE_URL="postgresql://postgres.votre-ref:[PASSWORD]@aws-0-region.pooler.supabase.com:6543/postgres?pgbouncer=true"
+DIRECT_URL="postgresql://postgres:[PASSWORD]@db.votre-ref.supabase.co:5432/postgres"
+
+# EMAIL (optionnel - laissez vide pour tester sans emails)
+RESEND_API_KEY=""
+
+# SÉCURITÉ - Générez une clé avec: openssl rand -hex 16
+CREDENTIALS_ENCRYPTION_KEY="votre-cle-32-caracteres"
+
+# APPLICATION
+NEXT_PUBLIC_BASE_URL="http://localhost:3000"
+```
+
+### Étape 5 : Initialiser la base de données
+
+```bash
+npx prisma db push
+```
+
+Cette commande crée toutes les tables nécessaires dans votre base de données Supabase.
+
+### Étape 6 : Configurer l'authentification Supabase
+
+1. Dans Supabase, allez dans **Authentication** > **URL Configuration**
+2. Configurez :
+   - **Site URL** : `http://localhost:3000`
+   - **Redirect URLs** : `http://localhost:3000/**`
+
+3. Dans **Authentication** > **Providers**, assurez-vous que **Email** est activé
+
+### Étape 7 : Créer votre compte utilisateur
+
+1. Dans Supabase, allez dans **Authentication** > **Users**
+2. Cliquez **"Add user"** > **"Create new user"**
+3. Entrez votre email et un mot de passe
+4. Cochez **"Auto Confirm User"**
+5. Cliquez **"Create user"**
+
+### Étape 8 : Lancer l'application
+
+```bash
 npm run dev
 ```
 
-### Premier lancement
+Ouvrez [http://localhost:3000](http://localhost:3000) dans votre navigateur.
+
+---
+
+## 🎉 Premier lancement
 
 Au premier lancement, vous serez redirigé vers un **Setup Wizard** qui vous permettra de configurer :
 
@@ -40,63 +137,7 @@ Au premier lancement, vous serez redirigé vers un **Setup Wizard** qui vous per
 2. **Configuration fiscale** - Numéros et taux de TPS/TVQ
 3. **Personnalisation visuelle** - Couleurs de marque
 
-## ⚙️ Configuration
-
-### Variables d'environnement
-
-Créez un fichier `.env` à la racine du projet :
-
-```env
-# ============================================
-# SUPABASE (Base de données + Auth)
-# ============================================
-# Trouvez ces valeurs dans Settings > API de votre projet Supabase
-NEXT_PUBLIC_SUPABASE_URL="https://votre-projet.supabase.co"
-NEXT_PUBLIC_SUPABASE_ANON_KEY="votre-anon-key"
-
-# ============================================
-# DATABASE
-# ============================================
-# Connection pooler (pour l'app) - Settings > Database > Connection string > URI
-DATABASE_URL="postgresql://postgres.[ref]:[password]@[host]:6543/postgres?pgbouncer=true"
-
-# Direct connection (pour les migrations) - Settings > Database > Connection string > URI (Direct)
-DIRECT_URL="postgresql://postgres.[ref]:[password]@[host]:5432/postgres"
-
-# ============================================
-# EMAIL (Resend)
-# ============================================
-# Créez une API key sur https://resend.com
-RESEND_API_KEY="re_xxxxxxxxxxxx"
-
-# ============================================
-# SÉCURITÉ
-# ============================================
-# Clé de chiffrement pour les identifiants clients (32 caractères)
-# Générez-en une avec: openssl rand -hex 16
-CREDENTIALS_ENCRYPTION_KEY="votre-cle-32-caracteres-ici"
-
-# ============================================
-# APPLICATION
-# ============================================
-# URL de base pour les liens dans les emails
-NEXT_PUBLIC_BASE_URL="http://localhost:3000"
-# En production : "https://votre-domaine.com"
-```
-
-### Configuration Supabase
-
-1. Créez un nouveau projet sur [Supabase](https://supabase.com)
-2. Dans **Authentication > URL Configuration**, ajoutez :
-   - Site URL : `http://localhost:3000` (ou votre domaine de production)
-   - Redirect URLs : `http://localhost:3000/**`
-3. Récupérez les clés API dans **Settings > API**
-
-### Configuration Resend (Emails)
-
-1. Créez un compte sur [Resend](https://resend.com)
-2. Vérifiez votre domaine pour l'envoi d'emails
-3. Créez une API key et ajoutez-la dans `.env`
+---
 
 ## 🎨 Personnalisation
 
@@ -112,7 +153,6 @@ export const DEFAULTS = {
   colorBackground: '#F5F5F5',  // Couleur de fond
   colorAccent: '#6366F1',      // Couleur d'accent
   colorAccentDark: '#4F46E5',  // Couleur d'accent foncée
-  // ...
 }
 ```
 
@@ -137,14 +177,6 @@ Par défaut, l'application utilise :
   font-display: swap;
 }
 
-@font-face {
-  font-family: 'Custom Body';
-  src: url('/fonts/VotrePolice-Regular.woff2') format('woff2');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
 /* Puis modifiez les variables CSS */
 :root {
   --font-heading: 'Custom Heading', Georgia, serif;
@@ -158,8 +190,7 @@ Par défaut, l'application utilise :
 
 ### Logo
 
-1. **Via l'interface** : Paramètres > Upload du logo
-2. Le logo est stocké dans Supabase Storage
+Uploadez votre logo dans **Paramètres > Informations de l'entreprise**. Le logo sera stocké dans Supabase Storage.
 
 ### Informations fiscales (Québec)
 
@@ -167,7 +198,9 @@ L'application est configurée par défaut pour le Québec avec :
 - **TPS** : 5%
 - **TVQ** : 9.975%
 
-Ces taux sont configurables dans les paramètres.
+Ces taux sont configurables dans le Setup Wizard et dans les paramètres.
+
+---
 
 ## 📱 Fonctionnalités
 
@@ -217,6 +250,8 @@ Ces taux sont configurables dans les paramètres.
 - Installation sur mobile/desktop
 - Fonctionne hors ligne
 
+---
+
 ## 🏗️ Architecture
 
 ```
@@ -252,15 +287,17 @@ src/
     └── supabase/         # Clients Supabase
 ```
 
+---
+
 ## 🚀 Déploiement
 
 ### Vercel (Recommandé)
 
 1. Connectez votre repo GitHub à [Vercel](https://vercel.com)
-2. Configurez les variables d'environnement
+2. Configurez les variables d'environnement (les mêmes que votre `.env`)
 3. Déployez
 
-La configuration Vercel est déjà incluse dans le projet.
+La configuration Vercel est déjà incluse dans le projet (`vercel.json`).
 
 ### Autres plateformes
 
@@ -270,12 +307,67 @@ L'application est compatible avec toute plateforme supportant Next.js :
 - DigitalOcean App Platform
 - Self-hosted (Docker)
 
+---
+
 ## 🔒 Sécurité
 
 - Les identifiants clients sont chiffrés avec AES-256-GCM
 - L'authentification utilise Supabase Auth avec tokens JWT
 - Les headers de sécurité sont configurés automatiquement
 - Les PDFs sont générés côté serveur
+
+---
+
+## ❓ Dépannage
+
+### "Prisma db push" timeout ou très lent
+
+**Cause** : Prisma utilise `DATABASE_URL` qui pointe vers le Transaction pooler, mais les migrations nécessitent une connexion directe.
+
+**Solution** : Assurez-vous que `DIRECT_URL` est correctement configuré dans votre `.env` et que `directUrl` est présent dans `prisma/schema.prisma` :
+
+```prisma
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")  // ← Important !
+}
+```
+
+### Erreur "prepared statement already exists"
+
+**Cause** : Vous utilisez le Transaction pooler pour une opération qui ne le supporte pas.
+
+**Solution** : Cette erreur survient quand Prisma essaie d'utiliser `DATABASE_URL` (pooler) au lieu de `DIRECT_URL` (direct). Vérifiez que `directUrl` est bien dans votre schema Prisma.
+
+### Mot de passe avec caractères spéciaux
+
+Si votre mot de passe contient des caractères spéciaux (`!`, `@`, `#`, `$`, etc.), vous devez les encoder dans les URLs :
+
+| Caractère | Encodage |
+|-----------|----------|
+| `!` | `%21` |
+| `@` | `%40` |
+| `#` | `%23` |
+| `$` | `%24` |
+| `%` | `%25` |
+| `&` | `%26` |
+
+**Exemple** : `MonMotDePasse!` devient `MonMotDePasse%21`
+
+### Erreur d'authentification
+
+- Assurez-vous d'avoir créé un utilisateur dans **Supabase > Authentication > Users**
+- Cliquez **"Add user"** > **"Create new user"**
+- **Important** : Cochez **"Auto Confirm User"** sinon vous devrez confirmer par email
+
+### Les emails ne s'envoient pas
+
+- Vérifiez que `RESEND_API_KEY` est configuré dans votre `.env`
+- Vérifiez que votre domaine est vérifié dans [Resend](https://resend.com)
+- Pour tester sans emails, laissez `RESEND_API_KEY=""` (les fonctionnalités email seront désactivées)
+
+---
 
 ## 📄 Licence
 
