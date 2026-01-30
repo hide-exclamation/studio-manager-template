@@ -36,7 +36,7 @@ export async function GET(
   }
 }
 
-// PATCH /api/time-entries/[id] - Met a jour ou arrete le timer
+// PATCH /api/time-entries/[id] - Met à jour ou arrête le timer
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -57,7 +57,7 @@ export async function PATCH(
       )
     }
 
-    // Si on arrete le timer, calculer la duree
+    // Si on arrête le timer, calculer la durée
     let finalDuration = durationMinutes
     let endTime = null
     let isRunning = existingEntry.isRunning
@@ -111,7 +111,7 @@ export async function DELETE(
   } catch (error) {
     console.error('Error deleting time entry:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la suppression de l\'entree de temps' },
+      { error: 'Erreur lors de la suppression de l\'entrée de temps' },
       { status: 500 }
     )
   }

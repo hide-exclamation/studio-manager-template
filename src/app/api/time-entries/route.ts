@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { serializeDecimal } from '@/lib/serialize'
 
-// GET /api/time-entries - Liste les entrees de temps
+// GET /api/time-entries - Liste les entrées de temps
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -32,7 +32,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/time-entries - Cree une entree de temps ou demarre un timer
+// POST /api/time-entries - Crée une entrée de temps ou démarre un timer
 export async function POST(request: Request) {
   try {
     const body = await request.json()
@@ -45,7 +45,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // Verifier qu'il n'y a pas deja un timer en cours
+    // Vérifier qu'il n'y a pas déjà un timer en cours
     if (startTimer) {
       const runningTimer = await prisma.timeEntry.findFirst({
         where: { isRunning: true }
@@ -53,7 +53,7 @@ export async function POST(request: Request) {
 
       if (runningTimer) {
         return NextResponse.json(
-          { error: 'Un timer est deja en cours. Arretez-le avant d\'en demarrer un nouveau.' },
+          { error: 'Un timer est déjà en cours. Arrêtez-le avant d\'en démarrer un nouveau.' },
           { status: 400 }
         )
       }
@@ -79,7 +79,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating time entry:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la creation de l\'entree de temps' },
+      { error: 'Erreur lors de la création de l\'entrée de temps' },
       { status: 500 }
     )
   }

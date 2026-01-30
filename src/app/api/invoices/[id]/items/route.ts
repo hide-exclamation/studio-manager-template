@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { serializeDecimal } from '@/lib/serialize'
 
-// POST /api/invoices/[id]/items - Ajoute un item a la facture
+// POST /api/invoices/[id]/items - Ajoute un item à la facture
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -11,7 +11,7 @@ export async function POST(
     const { id } = await params
     const body = await request.json()
 
-    // Verifier que la facture existe
+    // Vérifier que la facture existe
     const invoice = await prisma.invoice.findUnique({
       where: { id },
       include: { items: true }
@@ -24,7 +24,7 @@ export async function POST(
       )
     }
 
-    // Empecher l'ajout d'items sur les factures payees ou annulees
+    // Empêcher l'ajout d'items sur les factures payées ou annulées
     if (invoice.status === 'PAID' || invoice.status === 'CANCELLED') {
       return NextResponse.json(
         { error: 'Impossible de modifier une facture payée ou annulée' },
@@ -32,7 +32,7 @@ export async function POST(
       )
     }
 
-    // Determiner le sortOrder
+    // Déterminer le sortOrder
     const maxSortOrder = invoice.items.reduce((max, item) =>
       Math.max(max, item.sortOrder), -1
     )

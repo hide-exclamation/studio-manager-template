@@ -458,7 +458,7 @@ export default function SetupPage() {
                       color: 'var(--color-text-primary)',
                       border: '1px solid var(--color-border-light)',
                     }}
-                    placeholder="123 Rue Exemple, Montreal, QC H2X 1Y2"
+                    placeholder="123 Rue Exemple, Montréal, QC H2X 1Y2"
                   />
                 </div>
 

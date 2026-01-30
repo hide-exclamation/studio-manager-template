@@ -24,7 +24,7 @@ async function recalculateInvoiceTotals(invoiceId: string) {
   })
 }
 
-// PATCH /api/invoices/items/[itemId] - Met a jour un item
+// PATCH /api/invoices/items/[itemId] - Met à jour un item
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ itemId: string }> }
@@ -33,7 +33,7 @@ export async function PATCH(
     const { itemId } = await params
     const body = await request.json()
 
-    // Verifier que l'item existe
+    // Vérifier que l'item existe
     const existingItem = await prisma.invoiceItem.findUnique({
       where: { id: itemId },
       include: {
@@ -48,7 +48,7 @@ export async function PATCH(
       )
     }
 
-    // Empecher la modification si la facture est payee ou annulee
+    // Empêcher la modification si la facture est payée ou annulée
     if (existingItem.invoice.status === 'PAID' || existingItem.invoice.status === 'CANCELLED') {
       return NextResponse.json(
         { error: 'Impossible de modifier une facture payée ou annulée' },
@@ -95,7 +95,7 @@ export async function DELETE(
   try {
     const { itemId } = await params
 
-    // Verifier que l'item existe
+    // Vérifier que l'item existe
     const existingItem = await prisma.invoiceItem.findUnique({
       where: { id: itemId },
       include: {
@@ -110,7 +110,7 @@ export async function DELETE(
       )
     }
 
-    // Empecher la suppression si la facture est payee ou annulee
+    // Empêcher la suppression si la facture est payée ou annulée
     if (existingItem.invoice.status === 'PAID' || existingItem.invoice.status === 'CANCELLED') {
       return NextResponse.json(
         { error: 'Impossible de modifier une facture payée ou annulée' },

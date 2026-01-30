@@ -180,7 +180,7 @@ function generateQuoteHtml(quote: any, settings: any, logoBase64: string | null)
   const projectCode = `${quote.project.client.code}-${String(quote.project.projectNumber).padStart(3, '0')}`
   const primaryContact = quote.project.client.contacts[0]
 
-  // Infos du studio depuis les parametres ou valeurs par defaut
+  // Infos du studio depuis les paramètres ou valeurs par défaut
   const studioName = settings?.companyName || DEFAULTS.companyName
   const studioAddress = settings?.companyAddress || ''
 

@@ -115,7 +115,7 @@ function generateInvoiceHtml(invoice: any, settings: any, logoBase64: string | n
   const projectCode = `${invoice.project.client.code}-${String(invoice.project.projectNumber).padStart(3, '0')}`
   const primaryContact = invoice.project.client.contacts[0]
 
-  // Infos du studio depuis les parametres ou valeurs par defaut
+  // Infos du studio depuis les paramètres ou valeurs par défaut
   const studioName = settings?.companyName || DEFAULTS.companyName
   const studioAddress = settings?.companyAddress || ''
   const studioEmail = settings?.companyEmail || ''

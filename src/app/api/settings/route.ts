@@ -25,7 +25,7 @@ export async function GET() {
   }
 }
 
-// PUT /api/settings - Met a jour les parametres du studio
+// PUT /api/settings - Met à jour les paramètres du studio
 export async function PUT(request: Request) {
   try {
     const body = await request.json()
@@ -93,7 +93,7 @@ export async function PUT(request: Request) {
   } catch (error) {
     console.error('Error updating settings:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la mise a jour des parametres' },
+      { error: 'Erreur lors de la mise à jour des paramètres' },
       { status: 500 }
     )
   }

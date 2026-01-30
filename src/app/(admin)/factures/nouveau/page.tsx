@@ -317,7 +317,7 @@ export default function NewInvoicePage() {
               }}
             >
               <Plus size={16} />
-              Creer un projet
+              Créer un projet
             </Link>
           </div>
         ) : (

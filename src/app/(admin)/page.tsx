@@ -16,11 +16,11 @@ import {
 } from 'lucide-react'
 
 export default async function DashboardPage() {
-  // Recuperer les settings
+  // Récupérer les settings
   const settings = await getSettings()
   const companyName = settings.companyName || DEFAULTS.companyName
 
-  // Recuperer les donnees
+  // Récupérer les données
   const [
     activeProjects,
     pendingQuotes,

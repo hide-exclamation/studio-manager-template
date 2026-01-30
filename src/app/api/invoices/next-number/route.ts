@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 
-// GET /api/invoices/next-number?clientId=xxx - Suggere le prochain numero de facture
+// GET /api/invoices/next-number?clientId=xxx - Suggère le prochain numéro de facture
 export async function GET(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
@@ -14,7 +14,7 @@ export async function GET(request: Request) {
       )
     }
 
-    // Recuperer le code client
+    // Récupérer le code client
     const client = await prisma.client.findUnique({
       where: { id: clientId },
       select: { code: true }
