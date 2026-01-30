@@ -65,7 +65,7 @@ export async function POST(
       data: { subtotal, tpsAmount, tvqAmount, total }
     })
 
-    // Retourner la facture mise a jour
+    // Retourner la facture mise à jour
     const updatedInvoice = await prisma.invoice.findUnique({
       where: { id },
       include: {

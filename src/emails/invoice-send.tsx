@@ -104,7 +104,7 @@ export function InvoiceSendEmail({
         <Text style={summaryLabel}>Facture {invoiceNumber}</Text>
         <Text style={summaryTotal}>{total}</Text>
         <Text style={summaryDue}>
-          A payer avant le <strong>{dueDate}</strong>
+          À payer avant le <strong>{dueDate}</strong>
         </Text>
       </Section>
 

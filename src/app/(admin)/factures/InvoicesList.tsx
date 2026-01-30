@@ -299,7 +299,7 @@ export function InvoicesList() {
                 </div>
                 {parseFloat(invoice.amountPaid) > 0 && parseFloat(invoice.amountPaid) < parseFloat(invoice.total) && (
                   <div className="text-xs" style={{ color: 'var(--color-status-success)' }}>
-                    {formatCurrency(invoice.amountPaid)} paye
+                    {formatCurrency(invoice.amountPaid)} payé
                   </div>
                 )}
               </div>

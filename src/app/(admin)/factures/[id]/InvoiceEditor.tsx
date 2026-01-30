@@ -897,7 +897,7 @@ export function InvoiceEditor({ initialInvoice }: { initialInvoice: Invoice }) {
                 {invoice.paymentDate && (
                   <div className="flex items-center gap-2 pt-2" style={{ color: 'var(--color-text-muted)' }}>
                     <Calendar size={14} />
-                    <span>Paye le {formatDate(invoice.paymentDate)}</span>
+                    <span>Payé le {formatDate(invoice.paymentDate)}</span>
                   </div>
                 )}
 
@@ -1026,7 +1026,7 @@ export function InvoiceEditor({ initialInvoice }: { initialInvoice: Invoice }) {
 
               <div>
                 <label className="block text-sm mb-1" style={{ color: 'var(--color-text-muted)' }}>
-                  Methode de paiement
+                  Méthode de paiement
                 </label>
                 <select
                   value={paymentData.method}

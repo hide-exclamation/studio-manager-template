@@ -148,7 +148,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
       })
   }, [])
 
-  // State pour les items a la carte selectionnables
+  // State pour les items à la carte sélectionnables
   const [selections, setSelections] = useState<Record<string, boolean>>(() => {
     const initial: Record<string, boolean> = {}
     quote.sections.forEach(section => {

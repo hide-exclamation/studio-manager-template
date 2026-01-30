@@ -399,7 +399,7 @@ export function ExpensesList() {
           }}
         >
           <div className="text-sm mb-1" style={{ color: 'var(--color-text-muted)' }}>
-            Nombre de depenses
+            Nombre de dépenses
           </div>
           <div
             className="text-2xl font-medium"
@@ -491,7 +491,7 @@ export function ExpensesList() {
           }}
         >
           <Settings size={18} />
-          <span className="hidden sm:inline">Categories</span>
+          <span className="hidden sm:inline">Catégories</span>
         </button>
 
         {/* Add button */}
@@ -915,7 +915,7 @@ export function ExpensesList() {
                 className="text-lg font-medium"
                 style={{ color: 'var(--color-text-primary)' }}
               >
-                Categories de depenses
+                Catégories de dépenses
               </h3>
               <button
                 onClick={() => setShowCategoriesModal(false)}
