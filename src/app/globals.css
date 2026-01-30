@@ -1,0 +1,382 @@
+@import "tailwindcss";
+
+/* ========================================
+   POLICES - Google Fonts
+
+   Par défaut : Instrument Serif (titres) + Inter (corps)
+   Ces polices peuvent être remplacées par des polices custom
+   en ajoutant vos fichiers dans /public/fonts/ et en modifiant
+   les @font-face ci-dessous.
+   ======================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
+
+/*
+  Pour utiliser des polices custom, décommentez et modifiez :
+
+  @font-face {
+    font-family: 'Custom Heading';
+    src: url('/fonts/YourHeadingFont.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Custom Body';
+    src: url('/fonts/YourBodyFont-Regular.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  @font-face {
+    font-family: 'Custom Body';
+    src: url('/fonts/YourBodyFont-Bold.woff2') format('woff2');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  Puis modifiez --font-heading et --font-body ci-dessous.
+*/
+
+/* ========================================
+   DESIGN SYSTEM - Variables CSS
+   Studio Manager Template
+   ======================================== */
+
+:root {
+  /* FONDS */
+  --color-bg-primary: #FAFAFA;
+  --color-bg-secondary: #FFFFFF;
+  --color-bg-tertiary: #F5F5F5;
+  --color-bg-dark: #0A0A0A;
+  --color-bg-beige: #F5F1E8;
+
+  /* TEXTE */
+  --color-text-primary: #0A0A0A;
+  --color-text-secondary: #525252;
+  --color-text-muted: #737373;
+  --color-text-inverse: #FFFFFF;
+
+  /* ACCENTS */
+  --color-accent-lavender: #C5B8E3;
+  --color-accent-rose: #E88BA8;
+  --color-accent-yellow: #F5D785;
+
+  /* STATUS */
+  --color-status-success: #22C55E;
+  --color-status-success-text: #15803D; /* Version foncée pour texte - WCAG AA */
+  --color-status-warning: #F59E0B;
+  --color-status-warning-text: #B45309; /* Version foncée pour texte - WCAG AA */
+  --color-status-error: #EF4444;
+  --color-status-error-text: #DC2626; /* Version foncée pour texte - WCAG AA */
+  --color-status-info: #3B82F6;
+  --color-status-info-text: #1D4ED8; /* Version foncée pour texte - WCAG AA */
+
+  /* DEVIS - Badges */
+  --color-badge-service: #F5D785;
+  --color-badge-gratuit: #F5D785;
+  --color-badge-alacarte: #4ADE80;
+
+  /* BORDURES */
+  --color-border-light: #E5E5E5;
+  --color-border-medium: #D4D4D4;
+  --color-border-dark: #525252;
+
+  /* TYPOGRAPHIE */
+  --font-heading: 'Instrument Serif', Georgia, serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'SF Mono', 'Fira Code', monospace;
+
+  --text-xs: 0.75rem;       /* 12px */
+  --text-sm: 0.875rem;      /* 14px */
+  --text-base: 1rem;        /* 16px */
+  --text-lg: 1.125rem;      /* 18px */
+  --text-xl: 1.25rem;       /* 20px */
+  --text-2xl: 1.5rem;       /* 24px */
+  --text-3xl: 1.875rem;     /* 30px */
+  --text-4xl: 2.25rem;      /* 36px */
+
+  /* ESPACEMENTS */
+  --spacing-xs: 0.25rem;    /* 4px */
+  --spacing-sm: 0.5rem;     /* 8px */
+  --spacing-md: 1rem;       /* 16px */
+  --spacing-lg: 1.5rem;     /* 24px */
+  --spacing-xl: 2rem;       /* 32px */
+  --spacing-2xl: 3rem;      /* 48px */
+
+  /* RAYONS */
+  --radius-sm: 0.25rem;     /* 4px */
+  --radius-md: 0.5rem;      /* 8px */
+  --radius-lg: 0.75rem;     /* 12px */
+  --radius-xl: 1rem;        /* 16px */
+  --radius-full: 9999px;
+
+  /* OMBRES */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+
+  /* ANIMATIONS */
+  --ease-smooth: cubic-bezier(0.19, 1, 0.22, 1);
+  --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-slow: 400ms;
+
+  /* SIDEBAR */
+  --sidebar-width: 260px;
+  --sidebar-collapsed-width: 72px;
+}
+
+/* ========================================
+   THEME TAILWIND v4
+   ======================================== */
+
+@theme inline {
+  --color-background: var(--color-bg-primary);
+  --color-foreground: var(--color-text-primary);
+  --font-sans: var(--font-body);
+  --font-serif: var(--font-heading);
+}
+
+/* ========================================
+   BASE STYLES
+   ======================================== */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: var(--font-body);
+  font-size: var(--text-base);
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+/* ========================================
+   SCROLLBAR CUSTOM (Admin)
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-bg-tertiary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-border-medium);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-border-dark);
+}
+
+/* ========================================
+   FOCUS STATES (Accessibilité)
+   ======================================== */
+
+:focus-visible {
+  outline: 2px solid var(--color-accent-lavender);
+  outline-offset: 2px;
+}
+
+/* ========================================
+   INTERACTIVE ELEMENTS
+   ======================================== */
+
+button,
+[role="button"],
+a[href],
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+select {
+  cursor: pointer;
+}
+
+button:disabled,
+[role="button"][aria-disabled="true"],
+input:disabled,
+select:disabled {
+  cursor: not-allowed;
+}
+
+/* ========================================
+   BUTTON HOVER UTILITIES
+   ======================================== */
+
+/* Primary dark button */
+.btn-primary {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-primary:not(:disabled):hover {
+  background-color: #2a2a2a !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+.btn-primary:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Info/blue button */
+.btn-info {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-info:not(:disabled):hover {
+  background-color: #2563eb !important;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
+}
+.btn-info:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Success/green button */
+.btn-success {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-success:not(:disabled):hover {
+  background-color: #16a34a !important;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+  transform: translateY(-1px);
+}
+.btn-success:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Secondary/outline button */
+.btn-secondary {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-secondary:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary) !important;
+  border-color: var(--color-border-medium) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+.btn-secondary:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Ghost button (transparent bg) */
+.btn-ghost {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-ghost:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary) !important;
+}
+.btn-ghost:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Danger/red button */
+.btn-danger {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-danger:not(:disabled):hover {
+  background-color: rgba(239, 68, 68, 0.15) !important;
+}
+.btn-danger:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Icon button (small, square) */
+.btn-icon {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-icon:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary) !important;
+  color: var(--color-text-primary) !important;
+}
+.btn-icon:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* Icon button danger variant */
+.btn-icon-danger {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-icon-danger:not(:disabled):hover {
+  background-color: rgba(239, 68, 68, 0.1) !important;
+  color: var(--color-status-error) !important;
+}
+.btn-icon-danger:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* Dashed/add button */
+.btn-dashed {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-dashed:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary) !important;
+  border-color: var(--color-border-medium) !important;
+  color: var(--color-text-secondary) !important;
+}
+.btn-dashed:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Light success button (subtle green background) */
+.btn-success-light {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-success-light:not(:disabled):hover {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}
+.btn-success-light:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Lavender button */
+.btn-lavender {
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+}
+.btn-lavender:not(:disabled):hover {
+  background-color: rgba(197, 184, 227, 0.4) !important;
+}
+.btn-lavender:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* ========================================
+   UTILITIES
+   ======================================== */
+
+.text-balance {
+  text-wrap: balance;
+}
+
+.animate-in {
+  animation: fadeIn var(--duration-normal) var(--ease-smooth);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

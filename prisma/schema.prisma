@@ -1,0 +1,692 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================
+// CLIENTS & CONTACTS
+// ============================
+
+model Client {
+  id                   String       @id @default(uuid())
+  code                 String       @unique // Ex: "PAIR", "ARCH"
+  companyName          String       @map("company_name")
+  address              String?
+  businessNumber       String?      @map("business_number") // Numéro d'entreprise du Québec (NEQ)
+  status               ClientStatus @default(PROSPECT)
+  googleDriveUrl       String?      @map("google_drive_url")
+  notes                String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  contacts         Contact[]
+  projects         Project[]
+  credentials      Credential[]
+  emailPreferences ClientEmailPreferences?
+
+  @@map("clients")
+}
+
+// Préférences d'envoi d'email par client
+model ClientEmailPreferences {
+  id       String @id @default(uuid())
+  clientId String @unique @map("client_id")
+
+  // Envoi automatique par type d'email
+  quoteSend        Boolean @default(true) @map("quote_send")
+  quoteApproved    Boolean @default(true) @map("quote_approved")
+  invoiceSend      Boolean @default(true) @map("invoice_send")
+  invoiceReminder1 Boolean @default(true) @map("invoice_reminder_1") // J+21 après envoi
+  invoiceReminder2 Boolean @default(true) @map("invoice_reminder_2") // J+28 après envoi
+  invoiceOverdue   Boolean @default(true) @map("invoice_overdue")    // J+30 après envoi
+  paymentReceived  Boolean @default(true) @map("payment_received")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("client_email_preferences")
+}
+
+model Contact {
+  id        String  @id @default(uuid())
+  clientId  String  @map("client_id")
+  name      String
+  email     String?
+  phone     String?
+  role      String?
+  isPrimary Boolean @default(false) @map("is_primary")
+  notes     String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  client Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("contacts")
+}
+
+enum ClientStatus {
+  PROSPECT
+  ACTIVE
+  INACTIVE
+}
+
+// ============================
+// PROJECTS
+// ============================
+
+model Project {
+  id             String        @id @default(uuid())
+  clientId       String        @map("client_id")
+  categoryId     String?       @map("category_id")
+  projectNumber  Int           @map("project_number")
+  name           String
+  description    String?
+  status         ProjectStatus @default(PROSPECT)
+  startDate      DateTime?     @map("start_date")
+  endDate        DateTime?     @map("end_date")
+  googleDriveUrl String?       @map("google_drive_url")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  client       Client           @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  category     ProjectCategory? @relation(fields: [categoryId], references: [id])
+  quotes       Quote[]
+  invoices     Invoice[]
+  timeEntries  TimeEntry[]
+  expenses     Expense[]
+  projectTasks ProjectTask[]
+
+  @@unique([clientId, projectNumber])
+  @@map("projects")
+}
+
+// Catégories de projets pour les statistiques
+model ProjectCategory {
+  id        String  @id @default(uuid())
+  name      String  @unique
+  color     String? // Couleur pour l'affichage (hex)
+  icon      String? // Nom d'icône (lucide)
+  sortOrder Int     @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  projects Project[]
+
+  @@map("project_categories")
+}
+
+enum ProjectStatus {
+  PROSPECT
+  ACTIVE
+  PAUSED
+  COMPLETED
+  CANCELLED
+}
+
+// ============================
+// QUOTES (DEVIS)
+// ============================
+
+model Quote {
+  id            String      @id @default(uuid())
+  projectId     String      @map("project_id")
+  quoteNumber   String      @unique @map("quote_number") // Ex: D-PAIR-001
+  status        QuoteStatus @default(DRAFT)
+  coverTitle    String?     @map("cover_title")
+  coverSubtitle String?     @map("cover_subtitle")
+  coverImageUrl String?     @map("cover_image_url")
+  introduction  String?
+
+  subtotal Decimal @default(0) @db.Decimal(10, 2)
+  discounts Json?  // [{type: "PERCENTAGE"|"FIXED", value: number, label: string, reason: string}]
+  tpsRate  Decimal @default(0.05) @map("tps_rate") @db.Decimal(5, 4)
+  tvqRate  Decimal @default(0.09975) @map("tvq_rate") @db.Decimal(6, 5)
+  total    Decimal @default(0) @db.Decimal(10, 2)
+
+  validUntil     DateTime? @map("valid_until")
+  validityDays   Int       @default(30) @map("validity_days")
+  depositPercent Decimal   @default(50) @map("deposit_percent") @db.Decimal(5, 2)
+  paymentTerms   String?   @map("payment_terms")
+  lateFeePolicy  String?   @map("late_fee_policy")
+  endNotes       Json?     @map("end_notes")
+  publicToken    String?   @unique @map("public_token")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  project  Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  sections QuoteSection[]
+  invoices Invoice[]
+
+  @@map("quotes")
+}
+
+enum QuoteStatus {
+  DRAFT
+  SENT
+  VIEWED
+  ACCEPTED
+  REFUSED
+  EXPIRED
+}
+
+model QuoteSection {
+  id            String @id @default(uuid())
+  quoteId       String @map("quote_id")
+  sectionNumber Int    @map("section_number")
+  title         String
+  description   String?
+  sortOrder     Int    @default(0) @map("sort_order")
+
+  quote Quote       @relation(fields: [quoteId], references: [id], onDelete: Cascade)
+  items QuoteItem[]
+
+  @@map("quote_sections")
+}
+
+model QuoteItem {
+  id               String        @id @default(uuid())
+  sectionId        String        @map("section_id")
+  name             String
+  itemType         QuoteItemType @default(SERVICE) @map("item_type") // Deprecated, utiliser itemTypes
+  itemTypes        String[]      @default(["SERVICE"]) @map("item_types")
+  description      String?
+  deliverables     Json?
+  billingMode      BillingMode   @default(FIXED) @map("billing_mode")
+  quantity         Int           @default(1)
+  unitPrice        Decimal       @default(0) @map("unit_price") @db.Decimal(10, 2)
+  hourlyRate       Decimal?      @map("hourly_rate") @db.Decimal(10, 2)
+  hours            Decimal?      @db.Decimal(10, 2)
+  variants         Json?
+  selectedVariant  Int?          @map("selected_variant")
+  includeInTotal     Boolean           @default(true) @map("include_in_total")
+  isSelected         Boolean           @default(true) @map("is_selected")
+  collaboratorType   CollaboratorType? @map("collaborator_type")
+  collaboratorName   String?           @map("collaborator_name")
+  collaboratorAmount Decimal?          @map("collaborator_amount") @db.Decimal(10, 2)
+  sortOrder          Int               @default(0) @map("sort_order")
+
+  section QuoteSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("quote_items")
+}
+
+enum QuoteItemType {
+  SERVICE
+  PRODUCT
+  FREE
+  A_LA_CARTE
+}
+
+enum BillingMode {
+  FIXED   // quantite x prix
+  HOURLY  // heures x taux horaire
+}
+
+enum CollaboratorType {
+  OWNER      // Moi
+  FREELANCER // Pigiste
+}
+
+// ============================
+// INVOICES (FACTURES)
+// ============================
+
+model Invoice {
+  id              String        @id @default(uuid())
+  projectId       String        @map("project_id")
+  quoteId         String?       @map("quote_id")
+  invoiceNumber   String        @unique @map("invoice_number")
+  status          InvoiceStatus @default(DRAFT)
+  invoiceType     InvoiceType   @default(STANDALONE) @map("invoice_type")
+
+  issueDate DateTime  @default(now()) @map("issue_date")
+  dueDate   DateTime  @map("due_date")
+
+  subtotal   Decimal @default(0) @db.Decimal(10, 2)
+  tpsAmount  Decimal @default(0) @map("tps_amount") @db.Decimal(10, 2)
+  tvqAmount  Decimal @default(0) @map("tvq_amount") @db.Decimal(10, 2)
+  total      Decimal @default(0) @db.Decimal(10, 2)
+  amountPaid Decimal @default(0) @map("amount_paid") @db.Decimal(10, 2)
+
+  paymentDate    DateTime? @map("payment_date")
+  paymentMethod  String?   @map("payment_method")
+  lateFeeApplied    Boolean   @default(false) @map("late_fee_applied")
+  lateFeeAmount     Decimal   @default(0) @map("late_fee_amount") @db.Decimal(10, 2)
+  notes             String?
+  publicToken       String?   @unique @map("public_token")
+  isNumberReusable  Boolean   @default(false) @map("is_number_reusable")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  project  Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  quote    Quote?         @relation(fields: [quoteId], references: [id])
+  items    InvoiceItem[]
+  expenses Expense[]
+
+  @@map("invoices")
+}
+
+enum InvoiceStatus {
+  DRAFT
+  SENT
+  PAID
+  OVERDUE
+  CANCELLED
+}
+
+enum InvoiceType {
+  DEPOSIT
+  PARTIAL
+  FINAL
+  STANDALONE
+}
+
+model InvoiceItem {
+  id          String  @id @default(uuid())
+  invoiceId   String  @map("invoice_id")
+  description String
+  quantity    Int     @default(1)
+  unitPrice   Decimal @map("unit_price") @db.Decimal(10, 2)
+  total       Decimal @db.Decimal(10, 2)
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  invoice Invoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@map("invoice_items")
+}
+
+// ============================
+// PROJECT TASKS (Hiérarchique)
+// ============================
+
+model ProjectTask {
+  id        String            @id @default(uuid())
+  projectId String            @map("project_id")
+  parentId  String?           @map("parent_id")
+  title     String
+  status    ProjectTaskStatus @default(TODO)
+  dueDate   DateTime?         @map("due_date")
+  sortOrder Int               @default(0) @map("sort_order")
+  depth     Int               @default(0) // 0, 1, ou 2 max
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  project  Project       @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  parent   ProjectTask?  @relation("TaskHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children ProjectTask[] @relation("TaskHierarchy")
+
+  @@index([projectId])
+  @@index([parentId])
+  @@map("project_tasks")
+}
+
+enum ProjectTaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+// ============================
+// TIME TRACKING
+// ============================
+
+model TimeEntry {
+  id              String    @id @default(uuid())
+  projectId       String    @map("project_id")
+  description     String?
+  date            DateTime  @default(now())
+  durationMinutes Int       @map("duration_minutes")
+  billable        Boolean   @default(true)
+  startTime       DateTime? @map("start_time")
+  endTime         DateTime? @map("end_time")
+  isRunning       Boolean   @default(false) @map("is_running")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  project Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@map("time_entries")
+}
+
+// ============================
+// STUDIO SETTINGS
+// ============================
+
+model StudioSettings {
+  id                String   @id @default("default")
+  companyName       String?  @map("company_name")
+  companyShortName  String?  @map("company_short_name")  // Ex: "MS" pour sidebar collapsed
+  companyLogoUrl    String?  @map("company_logo_url")
+  companyAddress    String?  @map("company_address")
+  companyPhone      String?  @map("company_phone")
+  companyEmail      String?  @map("company_email")
+  companyWebsite    String?  @map("company_website")
+  tpsNumber         String?  @map("tps_number")
+  tvqNumber         String?  @map("tvq_number")
+  defaultTpsRate    Decimal  @default(0.05) @map("default_tps_rate") @db.Decimal(5, 4)
+  defaultTvqRate    Decimal  @default(0.09975) @map("default_tvq_rate") @db.Decimal(6, 5)
+
+  // COULEURS DE MARQUE
+  colorBackground   String   @default("#F5F5F5") @map("color_background")
+  colorAccent       String   @default("#6366F1") @map("color_accent")
+  colorAccentDark   String   @default("#4F46E5") @map("color_accent_dark")
+
+  // EMAIL
+  senderEmail       String?  @map("sender_email")
+
+  // SETUP
+  isConfigured      Boolean  @default(false) @map("is_configured")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("studio_settings")
+}
+
+// ============================
+// EXPENSES (DÉPENSES)
+// ============================
+
+model ExpenseCategory {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  color       String?   // Couleur pour l'affichage (hex)
+  icon        String?   // Nom d'icône (lucide)
+  sortOrder   Int       @default(0) @map("sort_order")
+  isDefault   Boolean   @default(false) @map("is_default")
+
+  createdAt DateTime @default(now()) @map("created_at")
+
+  expenses Expense[]
+
+  @@map("expense_categories")
+}
+
+model Expense {
+  id            String   @id @default(uuid())
+  categoryId    String   @map("category_id")
+  projectId     String?  @map("project_id")
+  description   String
+  amount        Decimal  @db.Decimal(10, 2)
+  date          DateTime @default(now())
+  vendor        String?  // Fournisseur
+  receiptUrl    String?  @map("receipt_url")
+  isBillable    Boolean  @default(false) @map("is_billable") // Facturé au client
+  isBilled      Boolean  @default(false) @map("is_billed")   // A été facturé
+  invoiceId     String?  @map("invoice_id") // Facture où c'est inclus
+  notes         String?
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  category ExpenseCategory @relation(fields: [categoryId], references: [id])
+  project  Project?        @relation(fields: [projectId], references: [id])
+  invoice  Invoice?        @relation(fields: [invoiceId], references: [id])
+
+  @@map("expenses")
+}
+
+// ============================
+// CREDENTIALS VAULT
+// ============================
+
+model Credential {
+  id           String   @id @default(uuid())
+  clientId     String   @map("client_id")
+  serviceName  String   @map("service_name")  // Ex: "WordPress Admin", "Hébergement cPanel"
+  serviceUrl   String?  @map("service_url")   // URL de connexion
+  username     String?
+  password     String                          // Encrypted with AES-256-GCM
+  notes        String?
+
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  client       Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  history      CredentialHistory[]
+
+  @@map("credentials")
+}
+
+model CredentialHistory {
+  id           String   @id @default(uuid())
+  credentialId String   @map("credential_id")
+  fieldName    String   @map("field_name")   // "username", "password", "serviceUrl", etc.
+  oldValue     String?  @map("old_value")    // Encrypted if sensitive
+  newValue     String   @map("new_value")    // Encrypted if sensitive
+  changedAt    DateTime @default(now()) @map("changed_at")
+
+  credential   Credential @relation(fields: [credentialId], references: [id], onDelete: Cascade)
+
+  @@map("credential_history")
+}
+
+// ============================
+// QUOTE TEMPLATES & LIBRARY
+// ============================
+
+model QuoteTemplate {
+  id             String   @id @default(uuid())
+  name           String
+  description    String?
+  coverTitle     String?  @map("cover_title")
+  coverSubtitle  String?  @map("cover_subtitle")
+  introduction   String?
+  depositPercent Decimal  @default(50) @map("deposit_percent") @db.Decimal(5, 2)
+  paymentTerms   String?  @map("payment_terms")
+  lateFeePolicy  String?  @map("late_fee_policy")
+  endNotes       Json?    @map("end_notes")
+  sortOrder      Int      @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  sections QuoteTemplateSection[]
+
+  @@map("quote_templates")
+}
+
+model QuoteTemplateSection {
+  id          String  @id @default(uuid())
+  templateId  String  @map("template_id")
+  title       String
+  description String?
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  template QuoteTemplate       @relation(fields: [templateId], references: [id], onDelete: Cascade)
+  items    QuoteTemplateItem[]
+
+  @@map("quote_template_sections")
+}
+
+model QuoteTemplateItem {
+  id             String      @id @default(uuid())
+  sectionId      String      @map("section_id")
+  name           String
+  itemTypes      String[]    @default(["SERVICE"]) @map("item_types")
+  description    String?
+  deliverables   Json?
+  billingMode    BillingMode @default(FIXED) @map("billing_mode")
+  quantity       Int         @default(1)
+  unitPrice      Decimal     @default(0) @map("unit_price") @db.Decimal(10, 2)
+  hourlyRate     Decimal?    @map("hourly_rate") @db.Decimal(10, 2)
+  hours          Decimal?    @db.Decimal(10, 2)
+  variants       Json?
+  includeInTotal Boolean     @default(true) @map("include_in_total")
+  sortOrder      Int         @default(0) @map("sort_order")
+
+  section QuoteTemplateSection @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("quote_template_items")
+}
+
+// Bibliothèque de sections réutilisables
+model SectionLibrary {
+  id          String  @id @default(uuid())
+  name        String  @unique
+  description String?
+  sortOrder   Int     @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  items SectionLibraryItem[]
+
+  @@map("section_library")
+}
+
+model SectionLibraryItem {
+  id             String      @id @default(uuid())
+  sectionId      String      @map("section_id")
+  name           String
+  itemTypes      String[]    @default(["SERVICE"]) @map("item_types")
+  description    String?
+  deliverables   Json?
+  billingMode    BillingMode @default(FIXED) @map("billing_mode")
+  quantity       Int         @default(1)
+  unitPrice      Decimal     @default(0) @map("unit_price") @db.Decimal(10, 2)
+  hourlyRate     Decimal?    @map("hourly_rate") @db.Decimal(10, 2)
+  hours          Decimal?    @db.Decimal(10, 2)
+  variants       Json?
+  includeInTotal Boolean     @default(true) @map("include_in_total")
+  sortOrder      Int         @default(0) @map("sort_order")
+
+  section SectionLibrary @relation(fields: [sectionId], references: [id], onDelete: Cascade)
+
+  @@map("section_library_items")
+}
+
+// ============================
+// NOTIFICATIONS
+// ============================
+
+model Notification {
+  id          String           @id @default(uuid())
+  type        NotificationType
+  title       String
+  message     String
+  link        String?
+  relatedId   String?          @map("related_id")
+  relatedType String?          @map("related_type") // quote, invoice, project, task
+  isRead      Boolean          @default(false) @map("is_read")
+  readAt      DateTime?        @map("read_at")
+  createdAt   DateTime         @default(now()) @map("created_at")
+
+  @@index([isRead, createdAt])
+  @@map("notifications")
+}
+
+enum NotificationType {
+  INVOICE_OVERDUE   // Facture en retard (J+30)
+  INVOICE_REMINDER  // Rappel facture impayée (J+7, J+14, J+21)
+  QUOTE_EXPIRED     // Devis expiré
+  QUOTE_VIEWED      // Devis consulté par le client
+  QUOTE_ACCEPTED    // Devis accepté
+  TASK_DUE_SOON     // Tâche à venir (J-7, J-3, J-1)
+  PROJECT_PAUSED    // Projet en pause depuis X jours
+  HOUR_BANK_LOW     // Banque d'heures presque vide (futur)
+}
+
+// Bibliothèque d'items individuels
+model ItemLibrary {
+  id             String      @id @default(uuid())
+  name           String
+  category       String?
+  itemTypes      String[]    @default(["SERVICE"]) @map("item_types")
+  description    String?
+  deliverables   Json?
+  billingMode    BillingMode @default(FIXED) @map("billing_mode")
+  defaultQuantity Int        @default(1) @map("default_quantity")
+  defaultPrice   Decimal     @default(0) @map("default_price") @db.Decimal(10, 2)
+  hourlyRate     Decimal?    @map("hourly_rate") @db.Decimal(10, 2)
+  estimatedHours Decimal?    @map("estimated_hours") @db.Decimal(10, 2)
+  variants       Json?
+  sortOrder      Int         @default(0) @map("sort_order")
+
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("item_library")
+}
+
+// ============================
+// EMAIL LOG (Historique d'envoi)
+// ============================
+
+model EmailLog {
+  id           String      @id @default(uuid())
+  type         EmailType
+  status       EmailStatus @default(PENDING)
+  recipient    String      // Adresse email destinataire
+  recipientName String?    @map("recipient_name")
+  subject      String
+
+  // Relations optionnelles
+  quoteId      String?     @map("quote_id")
+  invoiceId    String?     @map("invoice_id")
+  clientId     String?     @map("client_id")
+
+  // Tracking
+  resendId     String?     @map("resend_id") // ID retourné par Resend
+  errorMessage String?     @map("error_message")
+  sentAt       DateTime?   @map("sent_at")
+  openedAt     DateTime?   @map("opened_at")
+
+  createdAt    DateTime    @default(now()) @map("created_at")
+
+  @@index([quoteId])
+  @@index([invoiceId])
+  @@index([clientId])
+  @@index([type, status])
+  @@map("email_logs")
+}
+
+enum EmailType {
+  QUOTE_SEND           // Envoi de devis
+  QUOTE_APPROVED       // Confirmation approbation devis
+  INVOICE_SEND         // Envoi de facture
+  INVOICE_REMINDER_1   // Rappel facture J+21 après envoi
+  INVOICE_REMINDER_2   // Rappel facture J+28 après envoi
+  INVOICE_OVERDUE      // Facture en retard J+30 après envoi (frais 2%)
+  PAYMENT_RECEIVED     // Remerciement paiement reçu
+}
+
+// ============================
+// EMAIL TEMPLATES (Modèles personnalisables)
+// ============================
+
+model EmailTemplate {
+  id        String    @id @default(uuid())
+  type      EmailType @unique
+
+  // Sujet du courriel
+  subject   String
+
+  // Textes personnalisables (JSON pour flexibilité)
+  // Structure: { heading, greeting, intro, outro, signature, ... }
+  customTexts Json    @default("{}") @map("custom_texts")
+
+  createdAt DateTime  @default(now()) @map("created_at")
+  updatedAt DateTime  @updatedAt @map("updated_at")
+
+  @@map("email_templates")
+}
+
+enum EmailStatus {
+  PENDING   // En attente d'envoi
+  SENT      // Envoyé avec succès
+  FAILED    // Échec d'envoi
+  OPENED    // Ouvert par le destinataire
+}

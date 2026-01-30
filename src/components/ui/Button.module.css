@@ -1,0 +1,165 @@
+/* Base button styles */
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+  outline: none;
+  border: none;
+}
+
+.button:focus-visible {
+  outline: 2px solid var(--color-accent-lavender);
+  outline-offset: 2px;
+}
+
+.button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.button:not(:disabled):active {
+  transform: scale(0.98);
+}
+
+/* Variants */
+.primary {
+  background-color: var(--color-bg-dark);
+  color: var(--color-text-inverse);
+}
+
+.primary:not(:disabled):hover {
+  background-color: #2a2a2a;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transform: translateY(-1px);
+}
+
+.secondary {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-primary);
+  border: 1px solid var(--color-border-light);
+}
+
+.secondary:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-medium);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.ghost {
+  background-color: transparent;
+  color: var(--color-text-secondary);
+}
+
+.ghost:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.danger {
+  background-color: var(--color-status-error);
+  color: white;
+}
+
+.danger:not(:disabled):hover {
+  background-color: #dc2626;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  transform: translateY(-1px);
+}
+
+/* Sizes */
+.sm {
+  font-size: 0.75rem;
+  padding: 0.375rem 0.75rem;
+  height: 2rem;
+}
+
+.md {
+  font-size: 0.875rem;
+  padding: 0.5rem 1rem;
+  height: 2.5rem;
+}
+
+.lg {
+  font-size: 1rem;
+  padding: 0.625rem 1.25rem;
+  height: 3rem;
+}
+
+/* IconButton base styles */
+.iconButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+  outline: none;
+  border: none;
+  background: transparent;
+}
+
+.iconButton:focus-visible {
+  outline: 2px solid var(--color-accent-lavender);
+  outline-offset: 2px;
+}
+
+.iconButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.iconButton:not(:disabled):active {
+  transform: scale(0.95);
+}
+
+/* IconButton variants */
+.iconGhost {
+  color: var(--color-text-muted);
+}
+
+.iconGhost:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary);
+  color: var(--color-text-primary);
+}
+
+.iconSecondary {
+  background-color: var(--color-bg-secondary);
+  color: var(--color-text-secondary);
+  border: 1px solid var(--color-border-light);
+}
+
+.iconSecondary:not(:disabled):hover {
+  background-color: var(--color-bg-tertiary);
+  border-color: var(--color-border-medium);
+  color: var(--color-text-primary);
+}
+
+.iconDanger {
+  color: var(--color-text-muted);
+}
+
+.iconDanger:not(:disabled):hover {
+  background-color: rgba(239, 68, 68, 0.1);
+  color: var(--color-status-error);
+}
+
+/* IconButton sizes */
+.iconSm {
+  width: 2rem;
+  height: 2rem;
+}
+
+.iconMd {
+  width: 2.5rem;
+  height: 2.5rem;
+}
+
+.iconLg {
+  width: 3rem;
+  height: 3rem;
+}
