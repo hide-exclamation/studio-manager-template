@@ -300,9 +300,9 @@ function generateQuoteHtml(quote: any, settings: any, logoBase64: string | null)
           letter-spacing: 0.5px;
         }
         .section-title {
-          font-family: 'Instrument Serif', Georgia, serif;
+          font-family: 'Inter', -apple-system, sans-serif;
           font-size: 18pt;
-          font-weight: 400;
+          font-weight: 600;
           color: #0A0A0A;
           margin-top: 4px;
         }

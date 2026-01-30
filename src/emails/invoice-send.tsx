@@ -73,7 +73,7 @@ export function InvoiceSendEmail({
     greeting: customTexts?.greeting || `Bonjour ${firstName},`,
     intro: customTexts?.intro || `Veuillez trouver ci-joint la facture pour le projet`,
     callToAction: customTexts?.callToAction || 'Voir la facture',
-    note: customTexts?.note || `Pour toute question concernant cette facture, n'hesitez pas a me contacter.`,
+    note: customTexts?.note || `Pour toute question concernant cette facture, n'hésitez pas à me contacter.`,
     signature: customTexts?.signature || 'Merci,',
   }
 

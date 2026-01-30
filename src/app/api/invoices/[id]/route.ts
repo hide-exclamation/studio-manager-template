@@ -6,7 +6,7 @@ import { renderPaymentReceivedEmail } from '@/lib/email-templates'
 import { getTaxRates } from '@/lib/settings'
 import { EmailType } from '@prisma/client'
 
-// GET /api/invoices/[id] - Recupere une facture avec tous ses details
+// GET /api/invoices/[id] - Récupère une facture avec tous ses détails
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -55,7 +55,7 @@ export async function GET(
   }
 }
 
-// PATCH /api/invoices/[id] - Met a jour une facture
+// PATCH /api/invoices/[id] - Met à jour une facture
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -64,7 +64,7 @@ export async function PATCH(
     const { id } = await params
     const body = await request.json()
 
-    // Verifier que la facture existe et peut etre modifiee
+    // Vérifier que la facture existe et peut être modifiée
     const existingInvoice = await prisma.invoice.findUnique({
       where: { id },
       include: { items: true }
@@ -77,9 +77,9 @@ export async function PATCH(
       )
     }
 
-    // Empecher modification des factures payees ou annulees (sauf pour certains champs)
+    // Empêcher modification des factures payées ou annulées (sauf pour certains champs)
     if (existingInvoice.status === 'PAID' || existingInvoice.status === 'CANCELLED') {
-      // Seul le statut peut etre change dans certains cas
+      // Seul le statut peut être changé dans certains cas
       if (Object.keys(body).some(k => k !== 'status' && k !== 'notes')) {
         return NextResponse.json(
           { error: 'Impossible de modifier une facture payée ou annulée' },
@@ -100,19 +100,19 @@ export async function PATCH(
       lateFeeAmount,
     } = body
 
-    // Calculer les totaux si les items ont change
+    // Calculer les totaux si les items ont changé
     let subtotal = body.subtotal
     let tpsAmount = body.tpsAmount
     let tvqAmount = body.tvqAmount
     let total = body.total
 
     if (subtotal === undefined) {
-      // Recalculer a partir des items existants
+      // Recalculer à partir des items existants
       subtotal = existingInvoice.items.reduce((sum, item) => {
         return sum + Number(item.total)
       }, 0)
 
-      // Recuperer les taux de taxes depuis les settings
+      // Récupérer les taux de taxes depuis les settings
       const { tpsRate, tvqRate } = await getTaxRates()
 
       tpsAmount = subtotal * tpsRate
@@ -126,19 +126,19 @@ export async function PATCH(
       }
     }
 
-    // Si on passe a PAID, definir la date de paiement
+    // Si on passe à PAID, définir la date de paiement
     let finalPaymentDate = paymentDate
     if (status === 'PAID' && !paymentDate && !existingInvoice.paymentDate) {
       finalPaymentDate = new Date().toISOString()
     }
 
-    // Si on passe a PAID, definir le montant paye au total si non specifie
+    // Si on passe à PAID, définir le montant payé au total si non spécifié
     let finalAmountPaid = amountPaid
     if (status === 'PAID' && amountPaid === undefined && Number(existingInvoice.amountPaid) === 0) {
       finalAmountPaid = total
     }
 
-    // Si on passe a CANCELLED, marquer le numero comme reutilisable
+    // Si on passe à CANCELLED, marquer le numéro comme réutilisable
     let isNumberReusable = false
     if (status === 'CANCELLED' && existingInvoice.status !== 'CANCELLED') {
       isNumberReusable = true
@@ -179,7 +179,7 @@ export async function PATCH(
       },
     })
 
-    // Envoyer email de remerciement si passage a PAID
+    // Envoyer email de remerciement si passage à PAID
     if (status === 'PAID' && existingInvoice.status !== 'PAID') {
       try {
         const invoiceForEmail = await getInvoiceForEmail(id)
@@ -237,7 +237,7 @@ export async function DELETE(
       )
     }
 
-    // Empecher la suppression si des paiements ont ete enregistres
+    // Empêcher la suppression si des paiements ont été enregistrés
     if (Number(invoice.amountPaid) > 0) {
       return NextResponse.json(
         { error: 'Impossible de supprimer une facture avec des paiements enregistrés' },

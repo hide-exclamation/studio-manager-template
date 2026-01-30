@@ -43,8 +43,8 @@ const statusIcons = {
 
 const statusLabels = {
   PENDING: 'En attente',
-  SENT: 'Envoye',
-  FAILED: 'Echec',
+  SENT: 'Envoyé',
+  FAILED: 'Échec',
   OPENED: 'Ouvert',
 }
 
@@ -240,7 +240,7 @@ export function SendEmailModal({
               }}
             >
               <Eye size={16} />
-              Apercu
+              Aperçu
             </button>
             <button
               onClick={() => setActiveTab('history')}
@@ -317,7 +317,7 @@ export function SendEmailModal({
                       borderRadius: '8px',
                     }}
                   >
-                    Chargement de l&apos;apercu...
+                    Chargement de l&apos;aperçu...
                   </div>
                 ) : preview?.html ? (
                   <div
@@ -335,7 +335,7 @@ export function SendEmailModal({
                         height: '400px',
                         border: 'none',
                       }}
-                      title="Apercu email"
+                      title="Aperçu email"
                     />
                   </div>
                 ) : (
@@ -349,7 +349,7 @@ export function SendEmailModal({
                       borderRadius: '8px',
                     }}
                   >
-                    Impossible de charger l&apos;apercu
+                    Impossible de charger l&apos;aperçu
                   </div>
                 )}
 
@@ -364,7 +364,7 @@ export function SendEmailModal({
                     color: 'var(--color-text-secondary)',
                   }}
                 >
-                  Le PDF du {type === 'quote' ? 'devis' : 'la facture'} sera joint en piece jointe.
+                  Le PDF du {type === 'quote' ? 'devis' : 'la facture'} sera joint en pièce jointe.
                 </div>
               </div>
             ) : (
@@ -391,7 +391,7 @@ export function SendEmailModal({
                       borderRadius: '8px',
                     }}
                   >
-                    Aucun email envoye pour ce {type === 'quote' ? 'devis' : 'cette facture'}
+                    Aucun email envoyé pour ce {type === 'quote' ? 'devis' : 'cette facture'}
                   </div>
                 ) : (
                   <div

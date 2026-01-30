@@ -1,15 +1,15 @@
 /* Google Fonts - DOIT être avant @import "tailwindcss" */
-@import url('https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
 @import "tailwindcss";
 
 /* ========================================
    POLICES
 
-   Par défaut : Instrument Serif (titres) + Inter (corps)
-   Ces polices peuvent être remplacées par des polices custom
-   en ajoutant vos fichiers dans /public/fonts/ et en modifiant
-   les @font-face ci-dessous.
+   Par défaut : Inter pour les titres et le corps de texte.
+   Vous pouvez remplacer par des polices custom en ajoutant
+   vos fichiers dans /public/fonts/ et en modifiant les
+   @font-face ci-dessous.
    ======================================== */
 
 /*
@@ -87,7 +87,7 @@
   --color-border-dark: #525252;
 
   /* TYPOGRAPHIE */
-  --font-heading: 'Instrument Serif', Georgia, serif;
+  --font-heading: 'Inter', system-ui, sans-serif;
   --font-body: 'Inter', system-ui, sans-serif;
   --font-mono: 'SF Mono', 'Fira Code', monospace;
 

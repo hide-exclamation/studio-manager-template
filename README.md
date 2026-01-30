@@ -158,9 +158,7 @@ export const DEFAULTS = {
 
 ### Polices de caractères
 
-Par défaut, l'application utilise :
-- **Titres** : [Instrument Serif](https://fonts.google.com/specimen/Instrument+Serif) (Google Fonts)
-- **Corps** : [Inter](https://fonts.google.com/specimen/Inter) (Google Fonts)
+Par défaut, l'application utilise [Inter](https://fonts.google.com/specimen/Inter) (Google Fonts) pour les titres et le corps de texte.
 
 #### Utiliser des polices personnalisées
 
@@ -177,9 +175,17 @@ Par défaut, l'application utilise :
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Custom Body';
+  src: url('/fonts/VotrePolice-Body.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
 /* Puis modifiez les variables CSS */
 :root {
-  --font-heading: 'Custom Heading', Georgia, serif;
+  --font-heading: 'Custom Heading', system-ui, sans-serif;
   --font-body: 'Custom Body', system-ui, sans-serif;
 }
 ```

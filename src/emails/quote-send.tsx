@@ -67,12 +67,12 @@ export function QuoteSendEmail({
 
   // Default texts with proper accents
   const texts = {
-    heading: customTexts?.heading || 'Votre devis est pret',
+    heading: customTexts?.heading || 'Votre devis est prêt',
     greeting: customTexts?.greeting || `Bonjour ${firstName},`,
     intro: customTexts?.intro || `Merci pour votre confiance! Voici le devis pour votre projet`,
     callToAction: customTexts?.callToAction || 'Voir le devis complet',
-    outro: customTexts?.outro || `Vous pourrez consulter tous les details et approuver le devis directement en ligne. N'hesitez pas a me contacter si vous avez des questions.`,
-    signature: customTexts?.signature || 'A bientot,',
+    outro: customTexts?.outro || `Vous pourrez consulter tous les détails et approuver le devis directement en ligne. N'hésitez pas à me contacter si vous avez des questions.`,
+    signature: customTexts?.signature || 'À bientôt,',
   }
 
   return (
@@ -102,7 +102,7 @@ export function QuoteSendEmail({
         <Text style={summaryLabel}>Devis {quoteNumber}</Text>
         <Text style={summaryTotal}>{total}</Text>
         <Text style={{ ...summaryDetail, color: colors.accentDark }}>
-          Depot requis: {depositAmount} ({depositPercent}%)
+          Dépôt requis: {depositAmount} ({depositPercent}%)
         </Text>
         <Text style={summaryValidity}>
           Valide jusqu'au {validUntil}

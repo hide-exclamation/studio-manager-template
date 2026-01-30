@@ -27,13 +27,13 @@ const navigation = [
   { name: 'Tableau de bord', href: '/', icon: LayoutDashboard },
   { name: 'Clients', href: '/clients', icon: Users },
   { name: 'Projets', href: '/projets', icon: FolderKanban },
-  { name: 'Taches', href: '/taches', icon: CheckSquare },
+  { name: 'Tâches', href: '/taches', icon: CheckSquare },
   { name: 'Devis', href: '/devis', icon: FileText },
   { name: 'Factures', href: '/factures', icon: Receipt },
-  { name: 'Depenses', href: '/depenses', icon: Wallet },
+  { name: 'Dépenses', href: '/depenses', icon: Wallet },
   { name: 'Statistiques', href: '/statistiques', icon: BarChart3 },
-  { name: 'Bibliotheque', href: '/parametres/bibliotheque', icon: BookMarked },
-  { name: 'Parametres', href: '/parametres', icon: Settings },
+  { name: 'Bibliothèque', href: '/parametres/bibliotheque', icon: BookMarked },
+  { name: 'Paramètres', href: '/parametres', icon: Settings },
 ]
 
 export function Sidebar() {

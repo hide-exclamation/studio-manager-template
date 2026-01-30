@@ -106,7 +106,7 @@ export async function getBrandColors(): Promise<BrandColors> {
 }
 
 /**
- * Verifie si l'application est configuree
+ * Vérifie si l'application est configurée
  */
 export async function isAppConfigured(): Promise<boolean> {
   const settings = await prisma.studioSettings.findFirst({
@@ -127,7 +127,7 @@ export function formatCurrency(amount: number): string {
 }
 
 /**
- * Formate une date en francais canadien
+ * Formate une date en français canadien
  */
 export function formatDate(date: Date | string): string {
   const d = typeof date === 'string' ? new Date(date) : date

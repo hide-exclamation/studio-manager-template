@@ -22,7 +22,7 @@ export function Timer({ projectId, onTimeEntrySaved }: TimerProps) {
   const [elapsedSeconds, setElapsedSeconds] = useState(0)
   const [description, setDescription] = useState('')
 
-  // Verifier s'il y a un timer en cours au chargement
+  // Vérifier s'il y a un timer en cours au chargement
   useEffect(() => {
     const checkRunningTimer = async () => {
       try {

@@ -91,14 +91,14 @@ export async function POST(request: Request) {
 
     const quoteNumber = `D-${clientCode}-${String(nextNumber).padStart(3, '0')}`
 
-    // Generer un token public pour le lien client
+    // Générer un token public pour le lien client
     const publicToken = crypto.randomBytes(16).toString('hex')
 
-    // Calculer la date de validite (30 jours par defaut)
+    // Calculer la date de validité (30 jours par défaut)
     const validUntil = new Date()
     validUntil.setDate(validUntil.getDate() + 30)
 
-    // Recuperer les taux de taxes depuis les settings
+    // Récupérer les taux de taxes depuis les settings
     const { tpsRate, tvqRate } = await getTaxRates()
 
     const quote = await prisma.quote.create({

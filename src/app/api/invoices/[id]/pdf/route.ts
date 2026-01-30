@@ -184,9 +184,9 @@ function generateInvoiceHtml(invoice: any, settings: any, logoBase64: string | n
           border-bottom: 1px solid rgba(10,10,10,0.08);
         }
         .logo {
-          font-family: 'Instrument Serif', Georgia, serif;
+          font-family: 'Inter', -apple-system, sans-serif;
           font-size: 28pt;
-          font-weight: 400;
+          font-weight: 600;
           letter-spacing: -0.02em;
         }
         .header-right { text-align: right; }

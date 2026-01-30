@@ -1,7 +1,7 @@
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
-// Routes publiques qui ne necessitent pas d'authentification
+// Routes publiques qui ne nécessitent pas d'authentification
 const PUBLIC_ROUTES = [
   '/login',
   '/auth',
@@ -10,7 +10,7 @@ const PUBLIC_ROUTES = [
   '/api/public-settings',
 ]
 
-// Routes qui ne necessitent pas de verification de setup
+// Routes qui ne nécessitent pas de vérification de setup
 const SETUP_EXEMPT_ROUTES = [
   '/setup',
   '/api/settings',
@@ -73,7 +73,7 @@ export async function updateSession(request: NextRequest) {
     // Pour les routes API, retourner 401 au lieu de rediriger
     if (pathname.startsWith('/api/')) {
       return NextResponse.json(
-        { error: 'Non authentifie' },
+        { error: 'Non authentifié' },
         { status: 401 }
       )
     }
@@ -83,16 +83,16 @@ export async function updateSession(request: NextRequest) {
     return NextResponse.redirect(url)
   }
 
-  // Verifier si l'application est configuree (seulement pour les utilisateurs connectes)
-  // et pour les routes non-exemptees
+  // Vérifier si l'application est configurée (seulement pour les utilisateurs connectés)
+  // et pour les routes non-exemptées
   if (user && !isSetupExemptRoute(pathname) && !pathname.startsWith('/api/')) {
     try {
-      // Utiliser une requete interne pour verifier isConfigured
-      // On utilise un cookie pour eviter de faire une requete DB a chaque requete
+      // Utiliser une requête interne pour vérifier isConfigured
+      // On utilise un cookie pour éviter de faire une requête DB à chaque requête
       const setupChecked = request.cookies.get('setup-checked')?.value
 
       if (!setupChecked) {
-        // Faire une requete a l'API settings pour verifier
+        // Faire une requête à l'API settings pour vérifier
         const settingsUrl = new URL('/api/settings', request.url)
         const settingsRes = await fetch(settingsUrl.toString(), {
           headers: {
@@ -109,7 +109,7 @@ export async function updateSession(request: NextRequest) {
             return NextResponse.redirect(url)
           }
 
-          // Marquer le setup comme verifie pour cette session
+          // Marquer le setup comme vérifié pour cette session
           supabaseResponse.cookies.set('setup-checked', 'true', {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',

@@ -52,13 +52,13 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/invoices - Cree une nouvelle facture
+// POST /api/invoices - Crée une nouvelle facture
 export async function POST(request: Request) {
   try {
     const body = await request.json()
     const { projectId, quoteId, invoiceType = 'STANDALONE' } = body
 
-    // Recuperer le projet avec le client
+    // Récupérer le projet avec le client
     const project = await prisma.project.findUnique({
       where: { id: projectId },
       include: {
@@ -73,10 +73,10 @@ export async function POST(request: Request) {
       )
     }
 
-    // Generer le numero de facture: F-CLIENT-XXX
+    // Générer le numéro de facture: F-CLIENT-XXX
     const clientCode = project.client.code
 
-    // D'abord, chercher un numero reutilisable (facture annulee)
+    // D'abord, chercher un numéro réutilisable (facture annulée)
     const reusableInvoice = await prisma.invoice.findFirst({
       where: {
         invoiceNumber: { startsWith: `F-${clientCode}-` },
@@ -90,14 +90,14 @@ export async function POST(request: Request) {
     let invoiceNumber: string
 
     if (reusableInvoice) {
-      // Reutiliser le numero et marquer comme non-reutilisable
+      // Réutiliser le numéro et marquer comme non-réutilisable
       invoiceNumber = reusableInvoice.invoiceNumber
       await prisma.invoice.update({
         where: { id: reusableInvoice.id },
         data: { isNumberReusable: false }
       })
     } else {
-      // Generer un nouveau numero
+      // Générer un nouveau numéro
       const lastInvoice = await prisma.invoice.findFirst({
         where: {
           invoiceNumber: { startsWith: `F-${clientCode}-` }
@@ -117,10 +117,10 @@ export async function POST(request: Request) {
       invoiceNumber = `F-${clientCode}-${String(nextNumber).padStart(3, '0')}`
     }
 
-    // Generer un token public pour le lien client
+    // Générer un token public pour le lien client
     const publicToken = crypto.randomBytes(16).toString('hex')
 
-    // Date d'echeance par defaut: 30 jours
+    // Date d'échéance par défaut: 30 jours
     const dueDate = new Date()
     dueDate.setDate(dueDate.getDate() + 30)
 
@@ -130,7 +130,7 @@ export async function POST(request: Request) {
     let total = 0
     let items: { description: string; quantity: number; unitPrice: number; total: number; sortOrder: number }[] = []
 
-    // Si creation depuis un devis
+    // Si création depuis un devis
     if (quoteId && (invoiceType === 'DEPOSIT' || invoiceType === 'FINAL')) {
       const quote = await prisma.quote.findUnique({
         where: { id: quoteId },
@@ -171,14 +171,14 @@ export async function POST(request: Request) {
       const taxMultiplier = 1 + tpsRate + tvqRate
 
       if (invoiceType === 'DEPOSIT') {
-        // Verifier qu'il n'y a pas deja une facture de depot
+        // Vérifier qu'il n'y a pas déjà une facture de dépôt
         const existingDeposit = await prisma.invoice.findFirst({
           where: { quoteId, invoiceType: 'DEPOSIT', status: { not: 'CANCELLED' } }
         })
 
         if (existingDeposit) {
           return NextResponse.json(
-            { error: 'Une facture de depot existe deja pour ce devis' },
+            { error: 'Une facture de dépôt existe déjà pour ce devis' },
             { status: 400 }
           )
         }
@@ -190,25 +190,25 @@ export async function POST(request: Request) {
         tvqAmount = subtotal * tvqRate
 
         items = [{
-          description: `Depot (${depositPercent}%) - Devis ${quote.quoteNumber}`,
+          description: `Dépôt (${depositPercent}%) - Devis ${quote.quoteNumber}`,
           quantity: 1,
           unitPrice: subtotal,
           total: subtotal,
           sortOrder: 0,
         }]
       } else if (invoiceType === 'FINAL') {
-        // Calculer le montant restant apres depot
+        // Calculer le montant restant après dépôt
         const depositPaid = quote.invoices.reduce((sum, inv) => sum + Number(inv.total), 0)
 
-        // Copier tous les items selectionnes du devis
+        // Copier tous les items sélectionnés du devis
         let sortOrder = 0
         items = []
 
-        // Si un depot a ete paye, ajouter une ligne de deduction
+        // Si un dépôt a été payé, ajouter une ligne de déduction
         if (depositPaid > 0) {
           const depositSubtotal = depositPaid / taxMultiplier
           items.push({
-            description: `Depot deja facture - Devis ${quote.quoteNumber}`,
+            description: `Dépôt déjà facturé - Devis ${quote.quoteNumber}`,
             quantity: 1,
             unitPrice: -depositSubtotal,
             total: -depositSubtotal,
@@ -259,7 +259,7 @@ export async function POST(request: Request) {
 
         if (total <= 0) {
           return NextResponse.json(
-            { error: 'Le montant total du devis a deja ete facture' },
+            { error: 'Le montant total du devis a déjà été facturé' },
             { status: 400 }
           )
         }
@@ -305,7 +305,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating invoice:', error)
     return NextResponse.json(
-      { error: 'Erreur lors de la creation de la facture' },
+      { error: 'Erreur lors de la création de la facture' },
       { status: 500 }
     )
   }

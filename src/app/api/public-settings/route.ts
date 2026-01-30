@@ -2,8 +2,8 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { DEFAULTS } from '@/lib/settings'
 
-// GET /api/public-settings - Recupere les parametres publics (sans authentification)
-// Retourne uniquement les informations necessaires pour les vues publiques
+// GET /api/public-settings - Récupère les paramètres publics (sans authentification)
+// Retourne uniquement les informations nécessaires pour les vues publiques
 export async function GET() {
   try {
     const settings = await prisma.studioSettings.findUnique({

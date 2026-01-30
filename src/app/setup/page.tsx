@@ -124,7 +124,7 @@ export default function SetupPage() {
       }
 
       updateField('companyLogoUrl', data.url)
-      toast.success('Logo uploade avec succes')
+      toast.success('Logo uploadé avec succès')
     } catch (error) {
       console.error('Upload error:', error)
       toast.error(error instanceof Error ? error.message : "Erreur lors de l'upload")
@@ -170,7 +170,7 @@ export default function SetupPage() {
         throw new Error(data.error || 'Erreur lors de la sauvegarde')
       }
 
-      toast.success('Configuration terminee !')
+      toast.success('Configuration terminée !')
       router.push('/')
       router.refresh()
     } catch (error) {
@@ -226,7 +226,7 @@ export default function SetupPage() {
             className="text-sm mt-1"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Configurez votre Studio Manager en quelques etapes
+            Configurez votre Studio Manager en quelques étapes
           </p>
         </div>
       </div>
@@ -307,7 +307,7 @@ export default function SetupPage() {
                     className="text-sm"
                     style={{ color: 'var(--color-text-secondary)' }}
                   >
-                    Ces informations apparaitront sur vos devis et factures.
+                    Ces informations apparaîtront sur vos devis et factures.
                   </p>
                 </div>
 
@@ -416,7 +416,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Abreviation
+                      Abréviation
                     </label>
                     <input
                       type="text"
@@ -435,7 +435,7 @@ export default function SetupPage() {
                       className="text-xs mt-1"
                       style={{ color: 'var(--color-text-tertiary)' }}
                     >
-                      Affiche dans la sidebar reduite (2-4 caracteres)
+                      Affiché dans la sidebar réduite (2-4 caractères)
                     </p>
                   </div>
                 </div>
@@ -469,7 +469,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Telephone
+                      Téléphone
                     </label>
                     <input
                       type="tel"
@@ -544,7 +544,7 @@ export default function SetupPage() {
                     className="text-sm"
                     style={{ color: 'var(--color-text-secondary)' }}
                   >
-                    Configurez vos numeros de taxes et taux par defaut (TPS/TVQ pour le Quebec).
+                    Configurez vos numéros de taxes et taux par défaut (TPS/TVQ pour le Québec).
                   </p>
                 </div>
 
@@ -554,7 +554,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Numero TPS
+                      Numéro TPS
                     </label>
                     <input
                       type="text"
@@ -574,7 +574,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Numero TVQ
+                      Numéro TVQ
                     </label>
                     <input
                       type="text"
@@ -597,7 +597,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Taux TPS par defaut (%)
+                      Taux TPS par défaut (%)
                     </label>
                     <input
                       type="number"
@@ -619,7 +619,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Taux TVQ par defaut (%)
+                      Taux TVQ par défaut (%)
                     </label>
                     <input
                       type="number"
@@ -646,7 +646,7 @@ export default function SetupPage() {
                     className="text-sm"
                     style={{ color: 'var(--color-text-secondary)' }}
                   >
-                    Les taux par defaut au Quebec sont 5% (TPS) et 9.975% (TVQ). Vous pouvez
+                    Les taux par défaut au Québec sont 5% (TPS) et 9.975% (TVQ). Vous pouvez
                     les modifier selon votre situation fiscale.
                   </p>
                 </div>
@@ -735,7 +735,7 @@ export default function SetupPage() {
                       className="block text-sm font-medium mb-1.5"
                       style={{ color: 'var(--color-text-primary)' }}
                     >
-                      Accent fonce
+                      Accent foncé
                     </label>
                     <div className="flex items-center gap-3">
                       <input
@@ -766,7 +766,7 @@ export default function SetupPage() {
                     className="block text-sm font-medium mb-3"
                     style={{ color: 'var(--color-text-primary)' }}
                   >
-                    Apercu
+                    Aperçu
                   </label>
                   <div
                     className="rounded-lg p-6 border"
@@ -787,7 +787,7 @@ export default function SetupPage() {
                           {formData.companyName || 'Mon Studio'}
                         </p>
                         <p className="text-sm" style={{ color: '#666' }}>
-                          Document de demonstration
+                          Document de démonstration
                         </p>
                       </div>
                     </div>
@@ -829,7 +829,7 @@ export default function SetupPage() {
               disabled={currentStep === 1}
             >
               <ChevronLeft size={18} />
-              Precedent
+              Précédent
             </Button>
 
             {currentStep < 3 ? (

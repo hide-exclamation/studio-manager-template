@@ -106,7 +106,7 @@ export function SettingsForm() {
       }
 
       updateField('companyLogoUrl', data.url)
-      toast.success('Logo uploade avec succes')
+      toast.success('Logo uploadé avec succès')
     } catch (error) {
       console.error('Upload error:', error)
       toast.error(error instanceof Error ? error.message : "Erreur lors de l'upload")
@@ -138,7 +138,7 @@ export function SettingsForm() {
         throw new Error(data.error || 'Erreur lors de la sauvegarde')
       }
 
-      toast.success('Parametres sauvegardes avec succes')
+      toast.success('Paramètres sauvegardés avec succès')
     } catch (error) {
       console.error('Save error:', error)
       toast.error(error instanceof Error ? error.message : 'Erreur lors de la sauvegarde')
@@ -170,7 +170,7 @@ export function SettingsForm() {
             className="text-sm mb-4"
             style={{ color: 'var(--color-text-secondary)' }}
           >
-            Ce logo apparaitra sur vos devis et factures PDF.
+            Ce logo apparaîtra sur vos devis et factures PDF.
           </p>
 
           <div className="flex items-start gap-6">
@@ -282,7 +282,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Abreviation
+                Abréviation
               </label>
               <input
                 type="text"
@@ -345,7 +345,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Telephone
+                Téléphone
               </label>
               <input
                 type="tel"
@@ -388,7 +388,7 @@ export function SettingsForm() {
             className="text-lg font-medium mb-4"
             style={{ color: 'var(--color-text-primary)' }}
           >
-            Numeros de taxes
+            Numéros de taxes
           </h2>
 
           <div className="grid grid-cols-2 gap-4">
@@ -397,7 +397,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Numero TPS
+                Numéro TPS
               </label>
               <input
                 type="text"
@@ -417,7 +417,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Numero TVQ
+                Numéro TVQ
               </label>
               <input
                 type="text"
@@ -437,7 +437,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Taux TPS par defaut (%)
+                Taux TPS par défaut (%)
               </label>
               <input
                 type="number"
@@ -458,7 +458,7 @@ export function SettingsForm() {
                 className="block text-sm mb-1.5"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Taux TVQ par defaut (%)
+                Taux TVQ par défaut (%)
               </label>
               <input
                 type="number"
@@ -556,7 +556,7 @@ export function SettingsForm() {
                 className="block text-sm mb-2"
                 style={{ color: 'var(--color-text-secondary)' }}
               >
-                Accent fonce
+                Accent foncé
               </label>
               <div className="flex items-center gap-3">
                 <input
@@ -587,7 +587,7 @@ export function SettingsForm() {
               className="block text-sm mb-3"
               style={{ color: 'var(--color-text-secondary)' }}
             >
-              Apercu
+              Aperçu
             </label>
             <div
               className="rounded-lg p-6 border"
@@ -642,7 +642,7 @@ export function SettingsForm() {
         {/* Submit Button */}
         <div className="pt-4">
           <Button type="submit" loading={saving}>
-            Sauvegarder les parametres
+            Sauvegarder les paramètres
           </Button>
         </div>
       </form>

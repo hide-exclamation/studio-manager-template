@@ -462,7 +462,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
           <p
             className="text-xl mb-4"
             style={{
-              fontFamily: "'Instrument Serif', serif",
+              fontFamily: "'Inter', sans-serif",
               color: '#0A0A0A',
             }}
           >
@@ -525,7 +525,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
           <h1
             className="hero-animate mb-8"
             style={{
-              fontFamily: "'Instrument Serif', serif",
+              fontFamily: "'Inter', sans-serif",
               fontSize: 'clamp(3rem, 8vw, 6rem)',
               lineHeight: 0.95,
               letterSpacing: '-0.02em',
@@ -627,7 +627,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
               </span>
               <h2
                 style={{
-                  fontFamily: "'Instrument Serif', serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                   lineHeight: 1.1,
                   color: '#0A0A0A'
@@ -933,7 +933,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
                 <span
                   className="text-3xl md:text-4xl font-light"
                   style={{
-                    fontFamily: "'Instrument Serif', serif",
+                    fontFamily: "'Inter', sans-serif",
                     color: '#FFFFFF'
                   }}
                 >
@@ -970,7 +970,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
                   <h3
                     className="text-xl md:text-2xl mb-6"
                     style={{
-                      fontFamily: "'Instrument Serif', serif",
+                      fontFamily: "'Inter', sans-serif",
                       color: '#0A0A0A'
                     }}
                   >
@@ -1051,7 +1051,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
               </div>
               <h3
                 style={{
-                  fontFamily: "'Instrument Serif', serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: 'clamp(2rem, 4vw, 3rem)',
                   color: '#0A0A0A'
                 }}
@@ -1069,7 +1069,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
             <div className="space-y-10">
               <h3
                 style={{
-                  fontFamily: "'Instrument Serif', serif",
+                  fontFamily: "'Inter', sans-serif",
                   fontSize: 'clamp(2rem, 5vw, 3.5rem)',
                   lineHeight: 1.1,
                   color: '#0A0A0A'
@@ -1146,7 +1146,7 @@ export function PublicQuoteView({ quote: initialQuote }: Props) {
             <p
               className="text-xl font-medium"
               style={{
-                fontFamily: "'Instrument Serif', serif",
+                fontFamily: "'Inter', sans-serif",
                 color: '#FFFFFF',
               }}
             >
